@@ -1,26 +1,35 @@
-﻿using Newtonsoft.Json;
+﻿using BSC.Services;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Net;
+using System.Net.Http;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using static BSC.Models.TokenSnifferJsonModel;
 
 namespace BSC {
-    class Program {
-        const string TokenSnifferUrl = "https://tokensniffer.com/tokens/new";
-        static void Main(string[] args) {
-            using var webClient = new WebClient();
+    internal class Program {
+        
+        const string BscScanApiKey = "CXAIQDU54JAGTW65VMWI2AK8TYHQY722W5";
+        private static IServiceProvider _serviceProvider;
 
-            var tokenSnifferSource = webClient.DownloadString(TokenSnifferUrl);
+        static async Task Main(string[] args) {
+            RegisterServices();
 
-            var rawJsonData = GetJsonFromSource(tokenSnifferSource);
-            var jsonData = JsonConvert.DeserializeObject<Models.TokenSnifferJsonModel.Root>(rawJsonData);
-
-            var bscTokens = jsonData.props.pageProps.bscTokens;
+            var pService = _serviceProvider.GetRequiredService<IPancakseSwap>();
+            var result = await pService.GetSummaryAsync();
         }
 
-        private static string GetJsonFromSource(string tokenSnifferSource) {
-            var regex = new System.Text.RegularExpressions.Regex(@"\<script\s?.*?\>((.|\r\n)+?)\<\/script\>");
-            var v = regex.Match(tokenSnifferSource);
-            return v.Value.Replace(@"<script id=""__NEXT_DATA__"" type=""application/json"">", "").Replace("</script>", "");
+        private static void RegisterServices() {
+            var services = new ServiceCollection();
+            services.AddSingleton<IPancakseSwap, PancakeSwap>();
+            services.AddSingleton<ITokenSniffer, TokenSniffer>();
+            services.AddHttpClient();
+            
+            _serviceProvider = services.BuildServiceProvider(true);
         }
     }
 }
