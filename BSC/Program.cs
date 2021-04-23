@@ -19,6 +19,9 @@ namespace BSC {
         static async Task Main(string[] args) {
             RegisterServices();
 
+            var fomoService = _serviceProvider.GetRequiredService<ITokenfomo>();
+            var result2 = await fomoService.GetBscTokensAsync();
+
             var pService = _serviceProvider.GetRequiredService<IPancakseSwap>();
             var result = await pService.GetSummaryAsync();
         }
@@ -27,6 +30,7 @@ namespace BSC {
             var services = new ServiceCollection();
             services.AddSingleton<IPancakseSwap, PancakeSwap>();
             services.AddSingleton<ITokenSniffer, TokenSniffer>();
+            services.AddSingleton<ITokenfomo, Tokenfomo>();
             services.AddHttpClient();
             
             _serviceProvider = services.BuildServiceProvider(true);
