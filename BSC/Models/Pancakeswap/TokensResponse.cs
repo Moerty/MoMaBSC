@@ -14,11 +14,6 @@ namespace BSC.Models.Pancakeswap
             public long UpdatedAt { get; set; }
 
             [JsonProperty("data")]
-            public Data Data { get; set; }
-        }
-
-        public class Data {
-            [JsonProperty]
             public Dictionary<string, Token> Tokens { get; set; }
         }
 
@@ -30,10 +25,10 @@ namespace BSC.Models.Pancakeswap
             public string Symbol { get; set; }
 
             [JsonProperty("price")]
-            public string Price { get; set; }
+            public float Price { get; set; }
 
             [JsonProperty("price_BNB")]
-            public string PriceBNB { get; set; }
+            public float PriceBNB { get; set; }
         }
     }
 }

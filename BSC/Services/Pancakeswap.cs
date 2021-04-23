@@ -21,9 +21,16 @@ namespace BSC.Services {
             var content = await httpClient.GetStringAsync($"{ApiUrl}summary");
             return JsonConvert.DeserializeObject<Dictionary<string, Models.Pancakeswap.SummaryResponse>>(content);
         }
+
+        public async Task<Models.Pancakeswap.TokensResponse.Root> GetTokensAsync() {
+            var httpClient = _serviceProvider.GetHttpClient(); // https://api.pancakeswap.info/api/tokens
+            var content = await httpClient.GetStringAsync($"{ApiUrl}tokens");
+            return JsonConvert.DeserializeObject<Models.Pancakeswap.TokensResponse.Root>(content);
+        }
     }
 
     public interface IPancakseSwap {
         Task<Dictionary<string, Models.Pancakeswap.SummaryResponse>> GetSummaryAsync();
+        Task<Models.Pancakeswap.TokensResponse.Root> GetTokensAsync();
     }
 }
