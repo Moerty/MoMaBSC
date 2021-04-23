@@ -21,8 +21,6 @@ namespace BSC {
             var regex = new System.Text.RegularExpressions.Regex(@"\<script\s?.*?\>((.|\r\n)+?)\<\/script\>");
             var v = regex.Match(tokenSnifferSource);
             return v.Value.Replace(@"<script id=""__NEXT_DATA__"" type=""application/json"">", "").Replace("</script>", "");
-
-            //string output = System.Text.RegularExpressions.Regex.Replace(input, "<Video>(.*)</Video>", string.Format("<Video>www.test.com</Video>"))
         }
     }
 }
